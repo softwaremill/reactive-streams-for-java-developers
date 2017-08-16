@@ -46,13 +46,15 @@ public class CsvProcessor {
 
   private static final Config config = ConfigFactory.load();
   private static final Path DATA_DIR = Paths.get(config.getString("csv-processor.data-dir"));
+  private static final FiniteDuration DATA_DIR_POLL_INTERVAL =
+      FiniteDuration.fromNanos(config.getDuration("csv-processor.data-dir-poll-interval").toNanos());
   private static final double AVERAGE_THRESHOLD = config.getDouble("csv-processor.average-threshold");
   private static final int EMAIL_THRESHOLD = config.getInt("csv-processor.email-threshold");
 
   private static final Logger logger = Logger.getLogger("CsvProcessor");
 
   private final Source<Pair<Path, DirectoryChange>, NotUsed> newFiles =
-      DirectoryChangesSource.create(DATA_DIR, FiniteDuration.apply(100, TimeUnit.MILLISECONDS), 128);
+      DirectoryChangesSource.create(DATA_DIR, DATA_DIR_POLL_INTERVAL, 128);
 
   private final Flow<Pair<Path, DirectoryChange>, Path, NotUsed> csvPaths =
       Flow.<Pair<Path, DirectoryChange>>create()
