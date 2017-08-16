@@ -56,9 +56,13 @@ public class CsvProcessor {
 
   private final Flow<Pair<Path, DirectoryChange>, Path, NotUsed> csvPaths =
       Flow.<Pair<Path, DirectoryChange>>create()
-          .filter(p -> p.first().toString().endsWith(".csv") && p.second().equals(DirectoryChange.Creation))
+          .filter(this::isCsvFileCreationEvent)
           .log("new file", p -> p.first().getFileName())
           .map(Pair::first);
+
+  private boolean isCsvFileCreationEvent(Pair<Path, DirectoryChange> p) {
+    return p.first().toString().endsWith(".csv") && p.second().equals(DirectoryChange.Creation);
+  }
 
   private final Flow<Path, ByteString, NotUsed> fileBytes =
       Flow.of(Path.class).flatMapConcat(FileIO::fromPath);
