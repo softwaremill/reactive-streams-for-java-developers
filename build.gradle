@@ -14,6 +14,7 @@ def scalaVersion = "2.12"
 
 dependencies {
     compile "com.typesafe.akka:akka-http_$scalaVersion:10.0.9"
+    compile "com.typesafe.akka:akka-stream_$scalaVersion:2.5.4"
     compile "com.lightbend.akka:akka-stream-alpakka-file_$scalaVersion:0.11"
     compile "com.lightbend.akka:akka-stream-alpakka-csv_$scalaVersion:0.11"
 }

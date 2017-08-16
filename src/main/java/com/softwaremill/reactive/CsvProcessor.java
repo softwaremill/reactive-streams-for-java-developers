@@ -133,7 +133,7 @@ class Server extends HttpApp {
     return route(
         path("data", () -> {
               Source<Message, NotUsed> messages = readings.map(String::valueOf).map(TextMessage::create);
-              return handleWebSocketMessages(Flow.fromSinkAndSource(Sink.ignore(), messages));
+              return handleWebSocketMessages(Flow.fromSinkAndSourceCoupled(Sink.ignore(), messages));
             }
         ),
         get(() ->
